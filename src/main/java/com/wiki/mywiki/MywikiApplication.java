@@ -1,5 +1,7 @@
 package com.wiki.mywiki;
 
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SpringBootApplication
+@MapperScan("com.wiki.mywiki.mapper")
 public class MywikiApplication {
     private static final Logger LOG = LoggerFactory.getLogger(MywikiApplication.class);
     public static void main(String[] args) {
