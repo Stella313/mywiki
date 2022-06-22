@@ -1,0 +1,24 @@
+GET http://localhost:8080/hello
+#Accept: application/json
+
+> {%
+// client.demo("demo-hello", function() {
+//     client.log("test/hello interface");
+//     client.log(response.body);
+//     client.log(JSON.stringify(response.body));
+//     client.assert(response.status === 200, "return code is not 200");
+//     client.assert(response.body === "Hello World!", "Result Verification Failed");
+// });
+%}
+###
+
+
+
+POST http://localhost:8080/hello/post
+Content-Type: application/x-www-form-urlencoded
+
+name=tsun&content=hello
+
+###
+
+GET http://localhost:8080/demo/list1
