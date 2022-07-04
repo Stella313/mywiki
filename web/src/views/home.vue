@@ -1,8 +1,6 @@
 <template>
   <a-layout>
-    <a-layout-content style="padding: 0 50px">
-      <a-layout style="padding: 24px 0; background: #fff">
-        <a-layout-sider width="200" style="background: #fff">
+    <a-layout-sider width="200" style="background: #fff">
           <a-menu
               mode="inline"
               v-model:selectedKeys="selectedKeys2"
@@ -47,7 +45,7 @@
             </a-sub-menu>
           </a-menu>
         </a-layout-sider>
-        <a-layout-content
+    <a-layout-content
             :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px'}"
         >
           <a-list item-layout="vertical" size="large" :grid="{gutter: 20, column: 3}"  :data-source="ebooks">
@@ -69,8 +67,6 @@
             </template>
           </a-list>
         </a-layout-content>
-    </a-layout>
-    </a-layout-content>
   </a-layout>
 </template>
 
