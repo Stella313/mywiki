@@ -10,6 +10,7 @@ import com.wiki.mywiki.resp.EbookQueryResp;
 import com.wiki.mywiki.resp.EbookSaveReq;
 import com.wiki.mywiki.resp.PageResp;
 import com.wiki.mywiki.util.CopyUtil;
+import com.wiki.mywiki.util.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class EbookService {
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookMapper ebookMapper;
+    private UuidUtils uuidUtils;
     public List<Ebook> list(){
         return ebookMapper.selectByExample(null);
     }
@@ -52,6 +54,10 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if(ObjectUtils.isEmpty(req.getId())){
             // 新增
+            ebook.setId(uuidUtils.getId());
+            ebook.setDocCount(0);
+            ebook.setViewCount(0);
+            ebook.setVoteCount(0);
             ebookMapper.insert(ebook);
         }else{
             // 更新
