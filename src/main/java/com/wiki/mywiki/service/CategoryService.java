@@ -29,7 +29,7 @@ public class CategoryService {
         return categoryMapper.selectByExample(null);
     }
 
-    public List<CategoryQueryResp> all(CategoryQueryReq req){
+    public List<CategoryQueryResp> all(){
         CategoryExample categoryExample = new CategoryExample();
         categoryExample.setOrderByClause("sort asc");
         List<Category> categoryList =  categoryMapper.selectByExample(categoryExample);
