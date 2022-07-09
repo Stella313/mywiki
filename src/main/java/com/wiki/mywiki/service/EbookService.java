@@ -7,7 +7,7 @@ import com.wiki.mywiki.domain.EbookExample;
 import com.wiki.mywiki.mapper.EbookMapper;
 import com.wiki.mywiki.req.EbookQueryReq;
 import com.wiki.mywiki.resp.EbookQueryResp;
-import com.wiki.mywiki.resp.EbookSaveReq;
+import com.wiki.mywiki.req.EbookSaveReq;
 import com.wiki.mywiki.resp.PageResp;
 import com.wiki.mywiki.util.CopyUtil;
 import com.wiki.mywiki.util.UuidUtils;
