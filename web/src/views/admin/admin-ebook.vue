@@ -138,6 +138,7 @@ export default defineComponent({
      **/
     const handleQuery = (params: any) => {
       loading.value = true;
+      ebooks.value = [];
       axios.get("/ebook/list",{
         params:{
           page: params.page,
@@ -238,6 +239,10 @@ export default defineComponent({
           level1.value = []
           level1.value = Tool.array2Tree(categorys, 0);
           console.log("树形结构：", level1);
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize
+          });
         }else{
           message.error(data.message);
         }
@@ -254,10 +259,6 @@ export default defineComponent({
     };
     onMounted(() => {
       handleQueryCategory();
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
     });
     return {
       param,
