@@ -63,7 +63,7 @@
           <p>
             <a-form layout="inline" :model="param">
               <a-form-item>
-                <a-button type="primary" @click="handleSave()">
+                <a-button type="primary" @click="handleModalSave()">
                   保存
                 </a-button>
               </a-form-item>
@@ -175,7 +175,8 @@ export default defineComponent({
       });
     };
     // ------ 表单 ------
-    const doc = ref({});
+    const doc = ref();
+    doc.value = {};
     const treeSelectData = ref();
     treeSelectData.value = [];
     const modalVisible = ref(false);
@@ -184,10 +185,11 @@ export default defineComponent({
     editor.config.zIndex = 0;
     const handleModalSave = () => {
       modalLoading.value = true;
+      doc.value.content = editor.txt.html();
       axios.post("/doc/save",doc.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
-        if(data.success){
+        if(data.success ){
           modalVisible.value = false;
 
           // 重新加载列表

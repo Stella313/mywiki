@@ -2,8 +2,10 @@ package com.wiki.mywiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wiki.mywiki.domain.Content;
 import com.wiki.mywiki.domain.Doc;
 import com.wiki.mywiki.domain.DocExample;
+import com.wiki.mywiki.mapper.ContentMapper;
 import com.wiki.mywiki.mapper.DocMapper;
 import com.wiki.mywiki.req.DocQueryReq;
 import com.wiki.mywiki.req.DocSaveReq;
@@ -24,6 +26,8 @@ public class DocService {
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
     @Resource
     private DocMapper docMapper;
+    @Resource
+    private ContentMapper contentMapper;
     private UuidUtils uuidUtils;
     public List<Doc> list(){
         return docMapper.selectByExample(null);
@@ -62,13 +66,22 @@ public class DocService {
      */
     public void save(DocSaveReq req){
         Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if(ObjectUtils.isEmpty(req.getId())){
             // 新增
             doc.setId(uuidUtils.getId());
             docMapper.insert(doc);
+            // 新增content
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         }else{
             // 更新
             docMapper.updateByPrimaryKey(doc);
+            // 更新content
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if(count == 0){
+                contentMapper.insert(content);
+            }
         }
     }
 
