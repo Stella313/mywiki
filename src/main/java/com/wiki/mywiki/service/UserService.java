@@ -7,9 +7,11 @@ import com.wiki.mywiki.domain.UserExample;
 import com.wiki.mywiki.exception.BusinessException;
 import com.wiki.mywiki.exception.BusinessExceptionCode;
 import com.wiki.mywiki.mapper.UserMapper;
+import com.wiki.mywiki.req.UserLoginReq;
 import com.wiki.mywiki.req.UserQueryReq;
 import com.wiki.mywiki.req.UserResetPasswordReq;
 import com.wiki.mywiki.req.UserSaveReq;
+import com.wiki.mywiki.resp.UserLoginResp;
 import com.wiki.mywiki.resp.UserQueryResp;
 import com.wiki.mywiki.resp.PageResp;
 import com.wiki.mywiki.util.CopyUtil;
@@ -96,5 +98,26 @@ public class UserService {
     public void resetPassword(UserResetPasswordReq req){
         User user = CopyUtil.copy(req, User.class);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+    /**
+     * 登录
+     */
+    public UserLoginResp login(UserLoginReq req){
+        User userDb = selectByLoginName(req.getLoginName());
+        if(ObjectUtils.isEmpty(userDb)){
+            // 用户名不存在
+            LOG.info("用户名不存在，{}", req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        }else{
+            if(userDb.getPassword().equals(req.getPassword())){
+                // 登录成功
+                UserLoginResp userLoginResp = CopyUtil.copy(userDb, UserLoginResp.class);
+                return userLoginResp;
+            }else{
+                // 密码不对
+                LOG.info("密码不对，输入密码：{}, 数据库密码：{}", req.getLoginName(), userDb.getPassword());
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
     }
 }

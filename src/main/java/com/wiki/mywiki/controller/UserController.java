@@ -1,9 +1,11 @@
 package com.wiki.mywiki.controller;
 
+import com.wiki.mywiki.req.UserLoginReq;
 import com.wiki.mywiki.req.UserQueryReq;
 import com.wiki.mywiki.req.UserResetPasswordReq;
 import com.wiki.mywiki.req.UserSaveReq;
 import com.wiki.mywiki.resp.CommonResp;
+import com.wiki.mywiki.resp.UserLoginResp;
 import com.wiki.mywiki.resp.UserQueryResp;
 import com.wiki.mywiki.resp.PageResp;
 import com.wiki.mywiki.service.UserService;
@@ -46,6 +48,14 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+    @PostMapping("/login")
+    public CommonResp<UserLoginResp> login(@Valid @RequestBody UserLoginReq req){
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 }
