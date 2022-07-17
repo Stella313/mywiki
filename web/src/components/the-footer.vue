@@ -1,13 +1,20 @@
 <template>
   <a-layout-footer style="text-align: center">
-    E-book ©2022 Created by Tianyao Sun
+    E-book ©2022 Created by Tianyao Sun    欢迎：{{user.name}}
   </a-layout-footer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {computed, defineComponent} from 'vue';
+import store from "@/store";
 
 export default defineComponent({
-  name: 'the-footer'
+  name: 'the-footer',
+  setup(){
+    const user = computed(() => store.state.user);
+    return {
+      user,
+    }
+  }
 });
 </script>
