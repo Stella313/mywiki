@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wiki.mywiki.domain.User;
 import com.wiki.mywiki.domain.UserExample;
+import com.wiki.mywiki.exception.BusinessException;
+import com.wiki.mywiki.exception.BusinessExceptionCode;
 import com.wiki.mywiki.mapper.UserMapper;
 import com.wiki.mywiki.req.UserQueryReq;
 import com.wiki.mywiki.req.UserSaveReq;
@@ -14,9 +16,11 @@ import com.wiki.mywiki.util.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -53,16 +57,34 @@ public class UserService {
     public void save(UserSaveReq req){
         User user = CopyUtil.copy(req, User.class);
         if(ObjectUtils.isEmpty(req.getId())){
-            // 新增
-            user.setId(uuidUtils.getId());
-            userMapper.insert(user);
+            if(selectByLoginName(req.getLoginName()) == null){
+                // 新增
+                user.setId(uuidUtils.getId());
+                userMapper.insert(user);
+            }else{
+                // 用户名已存在
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
         }else{
             // 更新
-            userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null);
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
     public void delete(Long id){
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String loginName){
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(userList)){
+            return null;
+        }else{
+            return userList.get(0);
+        }
     }
 }
